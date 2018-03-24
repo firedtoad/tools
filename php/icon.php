@@ -1,6 +1,6 @@
 <?php
-$bundle_id = 'xxxx';
-$api_token = 'xxxx';
+$bundle_id = 'xxxxx';
+$api_token = 'xxxxx';
 
 
 function post($url,$data)
