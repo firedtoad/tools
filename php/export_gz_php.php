@@ -104,7 +104,7 @@ if(isset($argv[1]))
 {
     $ip=$argv[1];
 }else{
-//     exit('need_host');
+    exit('need_host');
 }
 
 $ports=range($st_port,$ed_port);
@@ -152,4 +152,4 @@ foreach ($servers as $k=>$v)
     $sdata[$k]=$vals;
 }
 
-file_put_contents($ip."gz_.json",json_encode($sdata));
+file_put_contents(date('Ymd').$ip."gz_.json",json_encode($sdata));
