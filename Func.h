@@ -19,6 +19,42 @@
 
 namespace Func
 {
+    template<size_t N, typename R, typename T>
+    R& CombineKey_(R &&r, T &&n)
+    {
+        return r = r << N | (n & ~(~0U << N));
+    }
+    template<size_t N, typename R, typename T, typename ... ARGS>
+    R& CombineKey_(R &&r, T &&n, ARGS&& ...args)
+    {
+        r = r << N | (n & ~(~0U << N));
+        return CombineKey_<N>(r, args...);
+    }
+    template<size_t N = 16, typename ... ARGS>
+    auto CombineKey(ARGS&& ...args)
+    {
+        uint64_t r = 0;
+        return CombineKey_<N>(r, std::forward<ARGS>(args)...);
+    }
+    template<size_t N, typename R, typename T>
+    void UnCombineKey_(R &&r, T &&n)
+    {
+        n = r & ~(~0U << N);
+    }
+    template<size_t N, typename R, typename T, typename ... ARGS>
+    void UnCombineKey_(R &&r, T &&n, ARGS&& ...args)
+    {
+        size_t sz = sizeof...(ARGS) * N;
+        n = (r >> (sz)) & ~(0U << N);
+        r = r & ~(~0U << (sz));
+        UnCombineKey_<N>(r, args...);
+    }
+    template<size_t N = 16, typename ... ARGS>
+    void UnCombineKey(uint64_t r, ARGS&& ... args)
+    {
+        return UnCombineKey_<N>(r, std::forward<ARGS>(args)...);
+    }
+
     template<typename K, typename V>
     std::unordered_map<K, V> page(std::unordered_map<K, V> &mp, size_t pnum, uint32_t page_size)
     {
