@@ -16,7 +16,7 @@
 #include <time.h>
 #include <unordered_map>
 #include <unordered_set>
-
+#include <codecvt>
 namespace Func
 {
     template<size_t N, typename R, typename T>
@@ -78,6 +78,33 @@ namespace Func
         return result;
     }
 
+	template<typename T>
+	std::string strJoin(T begin,T end,const char* delim)
+	{
+	    std::stringstream ss;
+	    if(begin != end)
+	    {
+	        ss << *begin++;
+	    }
+	    while(begin != end)
+	    {
+	        ss << delim;
+	        ss << *begin++;
+	    }
+	    return ss.str();
+	}
+	std::wstring utf8ToUtf16(const std::string& utf8Str)
+	{
+	    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> conv;
+	    return conv.from_bytes(utf8Str);
+	}
+
+	std::string utf16ToUtf8(const std::wstring& utf16Str)
+	{
+	    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> conv;
+	    return conv.to_bytes(utf16Str);
+	}
+	
     template<typename V>
     std::vector<V> page(std::vector<V> &mp, size_t pnum, uint32_t page_size)
     {
